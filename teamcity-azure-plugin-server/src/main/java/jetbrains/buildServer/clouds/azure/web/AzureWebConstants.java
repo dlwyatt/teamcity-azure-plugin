@@ -36,6 +36,7 @@ public class AzureWebConstants {
   public static final String PROVISION_PASSWORD="password";
   public static final String MAX_INSTANCES_COUNT="maxInstances";
   public static final String VNET_NAME = "vnetName";
+  public static final String PROFILE_MAX_INSTANCES_COUNT="maxProfileInstances";
 
   public String getVnetName() {
     return VNET_NAME;
@@ -82,4 +83,6 @@ public class AzureWebConstants {
   }
 
   public String getMaxInstancesCount() { return MAX_INSTANCES_COUNT; }
+
+  public String getProfileMaxInstancesCount() { return PROFILE_MAX_INSTANCES_COUNT; }
 }

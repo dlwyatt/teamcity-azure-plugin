@@ -31,7 +31,7 @@ BS.Clouds.Azure = BS.Clouds.Azure || {
   },
   _passwordsData: {},
   _displayedErrors: {},
-  _errorIds: ['sourceName', 'serviceName', 'maxInstances', 'vmNamePrefix', 'vnetName', 'vmSize', 'username', 'password'],
+  _errorIds: ['sourceName', 'serviceName', 'maxInstances', 'vmNamePrefix', 'vnetName', 'vmSize', 'username', 'password', 'profileMaxInstances'],
   init: function (refreshOptionsUrl) {
     this.$response = null;
     this.refreshOptionsUrl = refreshOptionsUrl;
@@ -48,6 +48,7 @@ BS.Clouds.Azure = BS.Clouds.Azure || {
     this.$usernameDataElem = $j('#username');
     this.$passwordDataElem = $j('#password');
     this.$maxInstancesDataElem = $j('#maxInstances');
+    this.$profileMaxInstancesDataElem = $j('#profileMaxInstances');
 
     this.$showDialogButton = $j('#azureShowDialogButton');
     this.$dialogSubmitButton = $j('#addImageButton');

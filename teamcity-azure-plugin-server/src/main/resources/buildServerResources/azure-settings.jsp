@@ -55,6 +55,16 @@
   </tr>
 
   <tr>
+    <th>Max # of instances: <l:star/></th>
+    <td>
+        <div>
+            <props:textProperty name="${cons.profileMaxInstancesCount}" className="longField"/>
+        </div>
+        <span class="error option-error option-error_${cons.profileMaxInstancesCount}"></span>
+    </td>
+  </tr>
+
+  <tr>
     <td colspan="2" class="loader-wrapper">
       <span id="error_fetch_options" class="error"></span>
       <div class="options-loader invisible"><i class="icon-refresh icon-spin"></i>&nbsp;Fetching options...</div>

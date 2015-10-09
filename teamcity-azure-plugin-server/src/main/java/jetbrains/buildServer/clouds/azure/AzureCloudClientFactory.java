@@ -100,26 +100,37 @@ public class AzureCloudClientFactory extends AbstractCloudClientFactory<AzureClo
   public AzureCloudClient createNewClient(@NotNull final CloudState state, @NotNull final Collection<AzureCloudImageDetails> imageDetailsList, @NotNull final CloudClientParameters params) {
     final String managementCertificate = params.getParameter("managementCertificate");
     final String subscriptionId = params.getParameter("subscriptionId");
+    final String maxInstanceCount = params.getParameter(AzureWebConstants.PROFILE_MAX_INSTANCES_COUNT);
+    int iMaxInstanceCount = 0;
+    if (maxInstanceCount != null) {
+      iMaxInstanceCount = Integer.parseInt(maxInstanceCount);
+    }
+
     final AzureApiConnector apiConnector;
     try {
       apiConnector = new AzureApiConnector(subscriptionId, managementCertificate);
     } catch (InvalidCertificateException e) {
       throw new RuntimeException(e);
     }
-    return new AzureCloudClient(params, imageDetailsList, apiConnector, myAzureStorage);
+    return new AzureCloudClient(params, imageDetailsList, apiConnector, iMaxInstanceCount,myAzureStorage);
   }
 
   @Override
   public AzureCloudClient createNewClient(@NotNull final CloudState state, @NotNull final CloudClientParameters params, final TypedCloudErrorInfo[] profileErrors) {
     final String managementCertificate = params.getParameter("managementCertificate");
     final String subscriptionId = params.getParameter("subscriptionId");
+    final String maxInstanceCount = params.getParameter(AzureWebConstants.PROFILE_MAX_INSTANCES_COUNT);
+    int iMaxInstanceCount = 0;
+    if (maxInstanceCount != null) {
+      iMaxInstanceCount = Integer.parseInt(maxInstanceCount);
+    }
     final AzureApiConnector apiConnector;
     try {
       apiConnector = new AzureApiConnector(subscriptionId, managementCertificate);
     } catch (InvalidCertificateException e) {
       throw new RuntimeException(e);
     }
-    final AzureCloudClient azureCloudClient = new AzureCloudClient(params, Collections.<AzureCloudImageDetails>emptyList(), apiConnector, myAzureStorage);
+    final AzureCloudClient azureCloudClient = new AzureCloudClient(params, Collections.<AzureCloudImageDetails>emptyList(), apiConnector, iMaxInstanceCount, myAzureStorage);
     azureCloudClient.updateErrors(Arrays.asList(profileErrors));
     return azureCloudClient;
   }

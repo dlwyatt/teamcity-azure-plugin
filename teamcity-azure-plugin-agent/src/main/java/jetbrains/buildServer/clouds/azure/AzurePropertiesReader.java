@@ -175,7 +175,7 @@ public class AzurePropertiesReader {
         myAgentConfiguration.setOwnPort(portValue);
         LOG.info("Own port is set to " + portValue);
       } catch (Exception ex){
-        LOG.warn("Unable to set self port. Azure integration will experience problems");
+        LOG.warn(ex);
       }
     } catch (JDOMException e) {
       LOG.warn("", e);

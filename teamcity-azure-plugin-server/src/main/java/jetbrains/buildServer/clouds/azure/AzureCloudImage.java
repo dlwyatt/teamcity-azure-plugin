@@ -54,15 +54,18 @@ public class AzureCloudImage extends AbstractCloudImage<AzureCloudInstance, Azur
   @NotNull private final File myIdxFile;
   private final AzureApiConnector myApiConnector;
   private boolean myGeneralized;
+  @NotNull private final AzureCloudClient myClient;
 
   protected AzureCloudImage(@NotNull final AzureCloudImageDetails imageDetails,
                             @NotNull final ProvisionActionsQueue actionsQueue,
                             @NotNull final AzureApiConnector apiConnector,
-                            @NotNull final File azureStorage) {
+                            @NotNull final File azureStorage,
+                            @NotNull final AzureCloudClient client) {
     super(imageDetails.getSourceName(), imageDetails.getSourceName());
     myImageDetails = imageDetails;
     myActionsQueue = actionsQueue;
     myIdxFile = new File(azureStorage, imageDetails.getSourceName() + ".idx");
+    myClient = client;
     if (!myIdxFile.exists()){
       try {
         FileUtil.writeFileAndReportErrors(myIdxFile, "1");
@@ -115,7 +118,8 @@ public class AzureCloudImage extends AbstractCloudImage<AzureCloudInstance, Azur
       return singleInstance != null && singleInstance.getStatus() == InstanceStatus.STOPPED;
     } else {
       return myInstances.size() < myImageDetails.getMaxInstances()
-             && myActionsQueue.isLocked(myImageDetails.getServiceName());
+             && myActionsQueue.isLocked(myImageDetails.getServiceName())
+             && myClient.canStartNewInstance();
     }
   }
 
@@ -288,6 +292,8 @@ public class AzureCloudImage extends AbstractCloudImage<AzureCloudInstance, Azur
     }
     return instance;
   }
+
+  public int getInstanceCount() { return myInstances.size(); }
 
   private int getNextIdx(){
     try {

@@ -44,13 +44,16 @@ public class AzureCloudClient extends AbstractCloudClient<AzureCloudInstance, Az
 
   private boolean myInitialized = false;
   private final ProvisionActionsQueue myActionsQueue;
+  private final int myMaxInstancesCount;
 
 
   public AzureCloudClient(@NotNull final CloudClientParameters params,
                           @NotNull final Collection<AzureCloudImageDetails> images,
                           @NotNull final AzureApiConnector apiConnector,
+                          final int maxInstancesCount,
                           @NotNull final File azureIdxStorage) {
     super(params, images, apiConnector);
+    myMaxInstancesCount = maxInstancesCount;
     myAzureIdxStorage = azureIdxStorage;
     myActionsQueue = new ProvisionActionsQueue(myAsyncTaskExecutor);
     myAsyncTaskExecutor.scheduleWithFixedDelay(myActionsQueue.getRequestCheckerCleanable(apiConnector), 0, 20, TimeUnit.SECONDS);
@@ -67,7 +70,7 @@ public class AzureCloudClient extends AbstractCloudClient<AzureCloudInstance, Az
 
   @Override
   protected AzureCloudImage checkAndCreateImage(@NotNull final AzureCloudImageDetails imageDetails) {
-    return new AzureCloudImage(imageDetails, myActionsQueue, (AzureApiConnector)myApiConnector, myAzureIdxStorage);
+    return new AzureCloudImage(imageDetails, myActionsQueue, (AzureApiConnector)myApiConnector, myAzureIdxStorage, this);
   }
 
   @Override
@@ -93,5 +96,16 @@ public class AzureCloudClient extends AbstractCloudClient<AzureCloudInstance, Az
   @Nullable
   public String generateAgentName(@NotNull final AgentDescription agent) {
     return "aaaaa";
+  }
+
+  public boolean canStartNewInstance() {
+    if (myMaxInstancesCount <= 0) { return true; }
+
+    int count = 0;
+    for (AzureCloudImage image : myImageMap.values()) {
+      count += image.getInstanceCount();
+    }
+
+    return count < myMaxInstancesCount;
   }
 }
